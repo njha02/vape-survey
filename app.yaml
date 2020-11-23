@@ -1,0 +1,13 @@
+runtime: python37
+
+handlers:
+  - url: /static
+    static_dir: webapp/static
+  - url: /.*
+    script: auto
+
+env_variables:
+  GCS_ROOT_PATH: "gs://flask-template/uploads"
+
+includes:
+  - secret.yaml
