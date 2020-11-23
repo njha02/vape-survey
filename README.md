@@ -1,11 +1,11 @@
-## flask-template
+## Vape Survey
 
 ### Quick Start
 
 ```
-conda create -n flask-template python=3.6
-source activate flask-template
-pip install -r webapp/requirements.txt
+conda create -n vape-survey python=3.6
+source activate vape-survey
+pip install -r requirements.txt
 cd webapp
 flask run
 ```

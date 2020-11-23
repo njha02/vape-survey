@@ -7,7 +7,7 @@ handlers:
     script: auto
 
 env_variables:
-  GCS_ROOT_PATH: "gs://flask-template/uploads"
+  GCS_ROOT_PATH: "gs://vape-survey/uploads"
 
 includes:
   - secret.yaml

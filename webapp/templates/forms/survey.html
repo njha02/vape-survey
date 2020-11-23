@@ -1,0 +1,50 @@
+{% extends 'layouts/form.html' %}
+{% block title %}Survey{% endblock %}
+{% block content %}
+<form method="post" class="form" action="/">
+  <h2 class="form-heading">
+    Vape Survey
+    <a href="/" title="Back to homepage"
+      ><i class="fa fa-home pull-right"></i
+    ></a>
+  </h2>
+  {{ form.hidden_tag() }}
+  <h3>{{form.name.label.text}}</h3>
+  {{form.name(class_='form-control first-input', placeholder=form.name.label.text, required=true, autofocus=true)}}
+  <br/>
+  <h3>{{form.email.label.text}}</h3>
+  {{form.email(class_='form-control first-input', placeholder=form.email.label.text, required=true, autofocus=true)}}
+  <br/>
+  <h3>{{form.age.label.text}}</h3>
+  {{form.age(class_='form-control first-input', placeholder=form.age.label.text, required=true, autofocus=true)}}
+  <br/>
+  <h3>{{form.grade.label.text}}</h3>
+  {{form.grade(class_='form-control first-input', placeholder=form.grade.label.text, required=true, autofocus=true)}}
+  <br/>
+  <h3>{{form.gender.label.text}}</h3>
+  {{form.gender(class_='form-control first-input', placeholder=form.gender.label.text, required=true, autofocus=true)}}
+  <br/>
+  <h3>{{form.friend1.label.text}}</h3>
+  {{form.friend1(class_='form-control first-input', placeholder=form.friend1.label.text, required=true, autofocus=true)}}
+  <br/>
+  <h3>{{form.friend2.label.text}}</h3>
+  {{form.friend2(class_='form-control first-input', placeholder=form.friend2.label.text, required=true, autofocus=true)}}
+  <br/>
+  <h3>{{form.friend3.label.text}}</h3>
+  {{form.friend3(class_='form-control first-input', placeholder=form.friend3.label.text, required=true, autofocus=true)}}
+  <br/>
+  <h3>{{form.influence.label.text}}</h3>
+  {{form.influence(class_='form-control first-input', placeholder=form.influence.label.text, required=true, autofocus=true)}}
+  <br/>
+  <h3>{{form.vape.label.text}}</h3>
+  {{form.vape(class_='form-control first-input', placeholder=form.vape.label.text, required=true, autofocus=true)}}
+  <br/>
+
+  <input
+    type="submit"
+    value="Submit"
+    class="btn btn-primary btn-lg btn-block"
+  />
+  <br />
+</form>
+{% endblock %}
