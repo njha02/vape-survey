@@ -26,4 +26,10 @@ jobs:
       - name: Test with pytest
         run: |
           pip install pytest
-          pytest 
+          pytest
+      - name: Publish app to Google App Engine
+        uses: zxyle/publish-gae-action@v2.3.0
+        with:
+          service_account_email: "vape-survey@appspot.gserviceaccount.com"
+          service_account_key: ${{ secrets.SERVICE_ACCT_KEY }}
+          project_id: vape-survey
