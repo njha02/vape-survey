@@ -9,6 +9,9 @@
     ></a>
   </h2>
   {{ form.hidden_tag() }}
+  <h3>{{form.school.label.text}}</h3>
+  {{form.school(class_='form-control first-input', placeholder=form.school.label.text, required=true, autofocus=true)}}
+  <br/>
   <h3>{{form.name.label.text}}</h3>
   {{form.name(class_='form-control first-input', placeholder=form.name.label.text, required=true, autofocus=true)}}
   <br/>

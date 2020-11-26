@@ -17,7 +17,9 @@ def create_app(config={}):
 with open("../secret.yaml") as f:
     secrets = yaml.load(f, Loader=yaml.SafeLoader)["env_variables"]
 
-config = {"SECRET_KEY": secrets["SECRET_KEY"], "ENCRYPTION_KEY": b'13aovYFrYBiMlhxYdnWhHX1zeDtIrgRPueNLhSkQzVY='}
+config = {
+    "SECRET_KEY": secrets["SECRET_KEY"],
+}
 
 
 if os.environ.get("DEV_OVERRIDE_USER"):
