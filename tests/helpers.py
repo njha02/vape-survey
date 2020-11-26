@@ -1,7 +1,11 @@
 import json
 import unittest
 
-from flask_template.webapp.app import create_app
+import sys
+
+import os
+
+from webapp.app import create_app
 
 
 class TestClient(object):
@@ -38,7 +42,7 @@ class TestClient(object):
 
 class TestCase(unittest.TestCase):
     def setUp(self):
-        self.app = create_app()
+        self.app = create_app({"SECRET_KEY": "pytest key"})
         self.ctx = self.app.app_context()
         self.ctx.push()
         self.client = TestClient(self.app)
