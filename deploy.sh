@@ -9,4 +9,3 @@ if [ ! -e secret.yaml ]; then
 fi
 
 yes | gcloud app deploy --project vape-survey
-gcloud app browse
