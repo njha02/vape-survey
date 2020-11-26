@@ -3,12 +3,14 @@ import yaml
 
 from webapp.app import create_app
 
+secret_key = os.environ.get("SECRET_KEY", None)
 
-with open("./secret.yaml") as f:
-    secrets = yaml.load(f, Loader=yaml.SafeLoader)["env_variables"]
-
-config = {"SECRET_KEY": secrets["SECRET_KEY"]}
-
+if not secret_key:  # SECRET_KEY is set in github secrets
+    with open("./secret.yaml") as f:
+        secrets = yaml.load(f, Loader=yaml.SafeLoader)["env_variables"]
+    secret_key = secrets["SECRET_KEY"]
+assert secret_key is not None, "Failed to get secret key from environ or secret.json"
+config = {"SECRET_KEY": secret_key
 
 if os.environ.get("DEV_OVERRIDE_USER"):
     config["DEV_OVERRIDE_USER"] = os.environ["DEV_OVERRIDE_USER"]
