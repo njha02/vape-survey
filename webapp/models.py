@@ -1,4 +1,5 @@
-from typing import List
+from typing import List, Optional
+import re
 import os
 import yaml
 from dataclasses import dataclass
@@ -6,9 +7,11 @@ from dataclasses import dataclass
 
 @dataclass
 class Question:
-    q_key: str
+    label: str
     description: str
     required: bool
+    regexp: Optional[str]
+    regexp_message: Optional[str]
 
 
 @dataclass
@@ -37,11 +40,27 @@ def load_from_yaml() -> List[Question]:
                 raise ValueError(
                     f"Error parsing question {i} in {question_file}. Is there an extra '---'?"
                 )
-            if "text" not in q:
+            if "type" not in q:
                 raise ValueError(
-                    f"Error parsing question {i} in {question_file}. No type defined"
+                    f"Error parsing question {i} in {question_file}. No type defined."
                 )
-            elif q["type"] == "text":
+            if "regexp" in q:
+                if "regexp_message" not in q:
+                    raise ValueError(
+                        f"Question {i} in {question_file} must define a regexp error message"
+                    )
+                try:
+                    compiled = re.compile(q["regexp"])
+                except re.error:
+                    raise ValueError(
+                        f"Error compiling regexp {q['regexp']} for question {i} in {question_file}"
+                    )
+                q["regexp"] = str(compiled)
+            else:
+                q["regexp"] = None
+                q["regexp_message"] = None
+
+            if q["type"] == "text":
                 del q["type"]  # remove unexpected fields
                 loaded_questions.append(Question(**q))
             elif q["type"] == "select":

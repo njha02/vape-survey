@@ -1,4 +1,4 @@
-q_key: "school"
+label: "School"
 description: "Select your school:"
 type: select
 required: true
@@ -7,27 +7,35 @@ choices:
  - "School 2"
  - "School 3"
 ---
-q_key: "name"
+label: "Name"
 description: "Please type your FIRST and LAST name:"
 type: text
 required: true
+regexp: '([a-zA-z]).+(\s)([a-zA-z]).+$'
+regexp_message: "Enter both a first and last name"
 ---
-q_key: "email"
+label: "Email"
 description: "If you wish to be entered into a drawing for an Amazon eGift card submit your email address. Your data will be anonymized and will not be linked to your survey results."
 type: email
 required: false
 ---
-q_key: "age"
+label: "Age"
 description: "How old are you?"
 type: integer
 required: true
 ---
-q_key: "grade"
+label: "Grade"
 description: "Please select your grade level:"
 type: text
+type: select
 required: true
+choices:
+ - "9th grade"
+ - "10th grade"
+ - "11th grade"
+ - "12th grade"
 ---
-q_key: "gender"
+label: "Gender"
 description: "Please select your gender: "
 type: select
 required: true
@@ -37,22 +45,28 @@ choices:
  - "Other"
  - "Prefer not to say"
 ---
-q_key: "closest1"
+label: "Closest 1"
 description: "Write the FIRST and LAST name of your three closest friends: "
 type: text
 required: true
+regexp: '([a-zA-z]).+(\s)([a-zA-z]).+$'
+regexp_message: "Enter both a first and last name"
 ---
-q_key: "closest2"
+label: "Closest 2"
 description: "Write the FIRST and LAST name of your three closest friends: "
 type: text
 required: true
+regexp: '([a-zA-z]).+(\s)([a-zA-z]).+$'
+regexp_message: "Enter both a first and last name"
 ---
-q_key: "closest3"
+label: "Closest 3"
 description: "Write the FIRST and LAST name of your three closest friends: "
 type: text
 required: true
+regexp: '([a-zA-z]).+(\s)([a-zA-z]).+$'
+regexp_message: "Enter both a first and last name"
 ---
-q_key: "influence"
+label: "Influence"
 description: "True/False: I think my friends strongly inuence my actions."
 type: select
 required: true
@@ -60,7 +74,7 @@ choices:
   - "True"
   - "False"
 ---
-q_key: "vape"
+label: "Vape"
 description: "True/False: I vape (at least once every two weeks."
 type: select
 required: true

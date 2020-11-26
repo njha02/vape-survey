@@ -8,9 +8,9 @@
     {{ form.hidden_tag() }}
     
     {% for q_model in form.questions %}
-      <h3>Question: {{loop.index}}</h3>
+      <h3>Question: {{loop.index}} | {{ q_model.label }}</h3>
       <p>{{q_model.description}}</p>
-      {{ form|attr(q_model.q_key)() }}
+      {{ form|attr(q_model.label)() }}
       <br/>
     {% endfor %}
 
