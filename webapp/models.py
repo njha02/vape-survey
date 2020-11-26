@@ -37,6 +37,10 @@ def load_from_yaml() -> List[Question]:
                 raise ValueError(
                     f"Error parsing question {i} in {question_file}. Is there an extra '---'?"
                 )
+            if "text" not in q:
+                raise ValueError(
+                    f"Error parsing question {i} in {question_file}. No type defined"
+                )
             elif q["type"] == "text":
                 del q["type"]  # remove unexpected fields
                 loaded_questions.append(Question(**q))
