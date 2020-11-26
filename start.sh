@@ -10,4 +10,4 @@ export FLASK_DEBUG=TRUE
 export FLASK_APP=main.py
 export GCS_ROOT_PATH='gs://vape-survey/uploads'
 export GOOGLE_APPLICATION_CREDENTIALS="./secret.json"
-flask run 
+python main.py

@@ -8,4 +8,5 @@ if [ ! -e secret.yaml ]; then
     gsutil cp gs://vape-survey-secrets/secret.yaml secret.yaml
 fi
 
-gcloud app deploy --project vape-survey
+yes | gcloud app deploy --project vape-survey
+gcloud app browse

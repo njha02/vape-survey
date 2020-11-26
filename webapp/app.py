@@ -12,17 +12,3 @@ def create_app(config={}):
     app.register_blueprint(views)
     Humanize(app)
     return app
-
-
-with open("../secret.yaml") as f:
-    secrets = yaml.load(f, Loader=yaml.SafeLoader)["env_variables"]
-
-config = {
-    "SECRET_KEY": secrets["SECRET_KEY"],
-}
-
-
-if os.environ.get("DEV_OVERRIDE_USER"):
-    config["DEV_OVERRIDE_USER"] = os.environ["DEV_OVERRIDE_USER"]
-
-app = create_app(config)

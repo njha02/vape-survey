@@ -11,7 +11,7 @@ from typing import List
 def init_sheets_service():
     SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
     credentials = ServiceAccountCredentials.from_json_keyfile_name(
-        "../secret.json", scopes=SCOPES
+        "./secret.json", scopes=SCOPES
     )
     service = build("sheets", "v4", credentials=credentials)
 
@@ -69,35 +69,3 @@ def write_to_sheet(tab_name: str, values: List[str]):
         valueInputOption="RAW",
     )
     response = request.execute()
-
-
-# def write_to_storage(data):
-#     client = storage.Client.from_service_account_json("../secret.json")
-#     bucket = client.bucket("vape-survey-results")
-
-#     def encrypt_data(data):
-#         def encrypt_string(s):
-#             return (
-#                 Fernet(current_app.config["ENCRYPTION_KEY"])
-#                 .encrypt(str.encode(s))
-#                 .decode()
-#             )
-
-#         data["name"] = encrypt_string(data["name"].strip().lower())
-#         data["friend1"] = encrypt_string(data["friend1"].strip().lower())
-#         data["friend2"] = encrypt_string(data["friend2"].strip().lower())
-#         data["friend3"] = encrypt_string(data["friend3"].strip().lower())
-#         return data
-
-#     data = encrypt_data(data)
-#     print("Encrypted data", data)
-
-#     filename = f'{data["name"]}.json'
-#     blob = bucket.blob(filename)
-#     blob.upload_from_string(json.dumps(data))
-#     print("Data {} uploaded to {}.".format(data, filename))
-
-#     destination = bucket.blob("data.json")
-#     destination.content_type = "text/plain"
-#     destination.compose([blob, destination])
-#     print("Composed new object {} in the bucket {}".format("data.json", bucket.name))
