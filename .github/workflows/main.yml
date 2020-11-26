@@ -27,18 +27,7 @@ jobs:
         run: |
           pip install pytest
           pytest
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Deploy to GAE
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      - id: Deploy
+        uses: google-github-actions/deploy-appengine@main
         with:
-            version: '290.0.1'
-            project_id: "vape-survey"
-            service_account_key: ${{ secrets.SERVICE_ACCT_KEY }}
-            export_default_credentials: true
-      - run: |
-            gcloud info
-            gcloud app deploy --project vape-survey
-        
+          credentials: ${{ secrets.GCP_SA_KEY }}
