@@ -8,18 +8,8 @@ from cryptography.fernet import Fernet
 from typing import List
 
 
-def init_sheets_service():
-    SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(
-        "./secret.json", scopes=SCOPES
-    )
-    service = build("sheets", "v4", credentials=credentials)
-
-    return service.spreadsheets()
-
-
-sheets = init_sheets_service()
 SPREADSHEET_ID = "144Gb6lhsflflL6MfCQcMSEsQDK819A_5EuZa6_rFtHk"
+# TODO: define all questions in file and generate form/headers/etc from that yaml file
 HEADERS = [
     "School",
     "Name",
@@ -33,15 +23,35 @@ HEADERS = [
     "Vape",
 ]
 
+sheets_service = None
+
+
+def init_sheets_service():
+    global sheets_service
+    if sheets_service:
+        return sheets_service
+    else:
+        SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+        credentials = ServiceAccountCredentials.from_json_keyfile_name(
+            "./secret.json", scopes=SCOPES
+        )
+        service = build("sheets", "v4", credentials=credentials)
+        sheets_service = service.spreadsheets()
+        return sheets_service
+
 
 def get_all_sheet_titles():
+    sheets_service = init_sheets_service()
     return [
         x["properties"]["title"]
-        for x in sheets.get(spreadsheetId=SPREADSHEET_ID).execute().get("sheets")
+        for x in sheets_service.get(spreadsheetId=SPREADSHEET_ID)
+        .execute()
+        .get("sheets")
     ]
 
 
 def create_tab(tab_name):
+    sheets_service = init_sheets_service()
     body = {
         "requests": [
             {
@@ -53,16 +63,19 @@ def create_tab(tab_name):
             }
         ]
     }
-    result = sheets.batchUpdate(spreadsheetId=SPREADSHEET_ID, body=body).execute()
+    result = sheets_service.batchUpdate(
+        spreadsheetId=SPREADSHEET_ID, body=body
+    ).execute()
     print(result)
     write_to_sheet(tab_name, HEADERS)
 
 
 def write_to_sheet(tab_name: str, values: List[str]):
+    sheets_service = init_sheets_service()
     if tab_name not in get_all_sheet_titles():
         create_tab(tab_name)
     value_range_body = {"values": [values]}
-    request = sheets.values().append(
+    request = sheets_service.values().append(
         range=f"{tab_name}",
         spreadsheetId=SPREADSHEET_ID,
         body=value_range_body,
