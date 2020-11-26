@@ -47,3 +47,7 @@ def submit_to_sheet(data):
     write_to_sheet(
         data["school"], list(data.values())
     )  # TODO: should be explicit about what fields we expect to recieve
+
+@blueprint.route("/about", methods=["GET"])    
+def about():
+    return render_template("pages/about_template.html") # 
