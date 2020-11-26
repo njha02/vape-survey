@@ -39,5 +39,10 @@ def submit_to_sheet(data):
     data["friend1"] = encrypt_string(data["friend1"].strip().lower())
     data["friend2"] = encrypt_string(data["friend2"].strip().lower())
     data["friend3"] = encrypt_string(data["friend3"].strip().lower())
-
-    write_to_sheet(data["school"], list(data.values()))
+    if "email" in data:
+        email = data["email"]
+        write_to_sheet("emails", [email])
+        del data["email"]
+    write_to_sheet(
+        data["school"], list(data.values())
+    )  # TODO: should be explicit about what fields we expect to recieve

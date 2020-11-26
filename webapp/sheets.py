@@ -23,7 +23,6 @@ SPREADSHEET_ID = "144Gb6lhsflflL6MfCQcMSEsQDK819A_5EuZa6_rFtHk"
 HEADERS = [
     "School",
     "Name",
-    "Email",
     "Age",
     "Grade",
     "Gender",
