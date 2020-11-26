@@ -10,6 +10,7 @@ blueprint = Blueprint("pages", __name__)
 @blueprint.route("/", methods=["GET", "POST"])
 def home():
     form = SurveyForm(request.form)
+
     if form.validate_on_submit():
         submit_to_sheet(form.data)
         return redirect("/thankyou")

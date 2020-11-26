@@ -6,51 +6,16 @@
       Vape Survey
     </h2>
     {{ form.hidden_tag() }}
-    <h3>Question: 1</h3>
-    <p>{{form.school.description}}</p>
-    {{form.school(class_='form-control first-input', placeholder=form.school.label.text, required=true, autofocus=true)}}
-    <br/>
-    <h3>Question: 2</h3>
-    <p>{{form.name.description}}</p>
-    {{form.name(class_='form-control first-input', placeholder=form.name.label.text, required=true, autofocus=true)}}
-    <br/>
-    <h3>Question: 3</h3>
-    <p>{{form.email.description}}</p>
-    {{form.email(class_='form-control first-input', placeholder=form.email.label.text, required=true, autofocus=true)}}
-    <br/>
-    <h3>Question: 4</h3>
-    <p>{{form.age.description}}</p>
-    {{form.age(class_='form-control first-input', placeholder=form.age.label.text, required=true, autofocus=true)}}
-    <br/>
-    <h3>Question: 5</h3>
-    <p>{{form.grade.description}}</p>
-    {{form.grade(class_='form-control first-input', placeholder=form.grade.label.text, required=true, autofocus=true)}}
-    <br/>
-    <h3>Question: 6</h3>
-    <p>{{form.gender.description}}</p>
-    {{form.gender(class_='form-control first-input', placeholder=form.gender.label.text, required=true, autofocus=true)}}
-    <br/>
-    <h3>Question: 7</h3>
-    <p>{{form.friend1.description}}</p>
-    {{form.friend1(class_='form-control first-input', placeholder=form.friend1.label.text, required=true, autofocus=true)}}
-    <br/>
-    <h3>Question: 8</h3>
-    <p>{{form.friend2.description}}</p>
-    {{form.friend2(class_='form-control first-input', placeholder=form.friend2.label.text, required=true, autofocus=true)}}
-    <br/>
-    <h3>Question: 9</h3>
-    <p>{{form.friend3.description}}</p>
-    {{form.friend3(class_='form-control first-input', placeholder=form.friend3.label.text, required=true, autofocus=true)}}
-    <br/>
-    <h3>Question: 10</h3>
-    <p>{{form.influence.description}}</p>
-    {{form.influence(class_='form-control first-input', placeholder=form.influence.label.text, required=true, autofocus=true)}}
-    <br/>
-    <h3>Question: 11</h3>
-    <p>{{form.vape.description}}</p>
-    {{form.vape(class_='form-control first-input', placeholder=form.vape.label.text, required=true, autofocus=true)}}
-    <br/>
+    
+    {% for q_model in form.questions %}
+      <h3>Question: {{loop.index}}</h3>
+      <p>{{q_model.description}}</p>
+      {{ form|attr(q_model.q_key)() }}
+      <br/>
+    {% endfor %}
 
+    <br/>
+    
     <input
       type="submit"
       value="Submit"

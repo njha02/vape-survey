@@ -1,0 +1,69 @@
+q_key: "school"
+description: "Select your school:"
+type: select
+required: true
+choices:
+ - "School 1"
+ - "School 2"
+ - "School 3"
+---
+q_key: "name"
+description: "Please type your FIRST and LAST name:"
+type: text
+required: true
+---
+q_key: "email"
+description: "If you wish to be entered into a drawing for an Amazon eGift card submit your email address. Your data will be anonymized and will not be linked to your survey results."
+type: email
+required: false
+---
+q_key: "age"
+description: "How old are you?"
+type: integer
+required: true
+---
+q_key: "grade"
+description: "Please select your grade level:"
+type: text
+required: true
+---
+q_key: "gender"
+description: "Please select your gender: "
+type: select
+required: true
+choices:
+ - "Female"
+ - "Male"
+ - "Other"
+ - "Prefer not to say"
+---
+q_key: "closest1"
+description: "Write the FIRST and LAST name of your three closest friends: "
+type: text
+required: true
+---
+q_key: "closest2"
+description: "Write the FIRST and LAST name of your three closest friends: "
+type: text
+required: true
+---
+q_key: "closest3"
+description: "Write the FIRST and LAST name of your three closest friends: "
+type: text
+required: true
+---
+q_key: "influence"
+description: "True/False: I think my friends strongly inuence my actions."
+type: select
+required: true
+choices:
+  - "True"
+  - "False"
+---
+q_key: "vape"
+description: "True/False: I vape (at least once every two weeks."
+type: select
+required: true
+choices:
+  - "True"
+  - "False"
