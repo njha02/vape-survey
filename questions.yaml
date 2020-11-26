@@ -11,8 +11,6 @@ label: "Name"
 description: "Please type your FIRST and LAST name:"
 type: text
 required: true
-regexp: '([a-zA-z]).+(\s)([a-zA-z]).+$'
-regexp_message: "Enter both a first and last name"
 ---
 label: "Email"
 description: "If you wish to be entered into a drawing for an Amazon eGift card submit your email address. Your data will be anonymized and will not be linked to your survey results."
@@ -49,22 +47,16 @@ label: "Closest 1"
 description: "Write the FIRST and LAST name of your three closest friends: "
 type: text
 required: true
-regexp: '([a-zA-z]).+(\s)([a-zA-z]).+$'
-regexp_message: "Enter both a first and last name"
 ---
 label: "Closest 2"
 description: "Write the FIRST and LAST name of your three closest friends: "
 type: text
 required: true
-regexp: '([a-zA-z]).+(\s)([a-zA-z]).+$'
-regexp_message: "Enter both a first and last name"
 ---
 label: "Closest 3"
 description: "Write the FIRST and LAST name of your three closest friends: "
 type: text
 required: true
-regexp: '([a-zA-z]).+(\s)([a-zA-z]).+$'
-regexp_message: "Enter both a first and last name"
 ---
 label: "Influence"
 description: "True/False: I think my friends strongly inuence my actions."

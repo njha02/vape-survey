@@ -18,7 +18,7 @@ def home():
         for field, errors in form.errors.items():
             for error in errors:
                 flash(
-                    u"Error in the %s field - %s"
+                    "Error in the %s field - %s"
                     % (getattr(form, field).label.text, error),
                     "error",
                 )
@@ -36,18 +36,46 @@ def submit_to_sheet(data):
     def encrypt_string(s):
         return hashlib.sha512(str.encode(s)).hexdigest()
 
-    data["name"] = encrypt_string(data["name"].strip().lower())
-    data["friend1"] = encrypt_string(data["friend1"].strip().lower())
-    data["friend2"] = encrypt_string(data["friend2"].strip().lower())
-    data["friend3"] = encrypt_string(data["friend3"].strip().lower())
-    if "email" in data:
-        email = data["email"]
-        write_to_sheet("emails", [email])
-        del data["email"]
-    write_to_sheet(
-        data["school"], list(data.values())
-    )  # TODO: should be explicit about what fields we expect to recieve
+    for x in [
+        "School",
+        "Name",
+        "Email",
+        "Age",
+        "Grade",
+        "Gender",
+        "Closest 1",
+        "Closest 2",
+        "Closest 3",
+        "Influence",
+        "Vape",
+    ]:
+        assert x in data
 
-@blueprint.route("/about", methods=["GET"])    
+    data["Name"] = encrypt_string(data["Name"].strip().lower())
+    data["Closest 1"] = encrypt_string(data["Closest 1"].strip().lower())
+    data["Closest 2"] = encrypt_string(data["Closest 2"].strip().lower())
+    data["Closest 3"] = encrypt_string(data["Closest 3"].strip().lower())
+    if "Email" in data:
+        email = data["Email"]
+        write_to_sheet(f"{data['School']} Emails", [email])
+        del data["Email"]
+    write_to_sheet(
+        data["School"],
+        [
+            data["School"],
+            data["Name"],
+            data["Age"],
+            data["Grade"],
+            data["Gender"],
+            data["Closest 1"],
+            data["Closest 2"],
+            data["Closest 3"],
+            data["Influence"],
+            data["Vape"],
+        ],
+    )
+
+
+@blueprint.route("/about", methods=["GET"])
 def about():
-    return render_template("pages/about_template.html") # 
+    return render_template("pages/about_template.html")  #

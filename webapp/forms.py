@@ -1,3 +1,4 @@
+import re
 from flask_wtf import Form
 from wtforms import TextField, IntegerField, SelectField
 from wtforms.fields.html5 import EmailField
@@ -16,20 +17,20 @@ def question_to_field(q: Question):
     if q.required:
         validators.append(DataRequired())
     if q.regexp:
-        validators.append(Regexp(q.regexp, message=q.regexp_message))
+        validators.append(Regexp(re.compile(q.regexp), message=q.regexp_message))
     if isinstance(q, SelectQuestion):
         return SelectField(
             description=q.description,
             label=q.label,
-            choices=[(x, x) for x in q.choices],
-            validators=validators + [Length(min=6, max=25)],
+            choices=[("", "")] + [(x, x) for x in q.choices],
+            validators=validators,
             render_kw={"class": "form-control"},
         )
     elif isinstance(q, EmailQuestion):
         return EmailField(
             description=q.description,
             label=q.label,
-            validators=validators + [Length(min=6, max=25)],
+            validators=validators,
             render_kw={"class": "form-control"},
         )
     elif isinstance(q, IntegerQuestion):
@@ -37,7 +38,11 @@ def question_to_field(q: Question):
             description=q.description,
             label=q.label,
             validators=validators
-            + [NumberRange(min=13, max=21, message="Enter a valid number between 13 and 21.")],
+            + [
+                NumberRange(
+                    min=13, max=21, message="Enter a valid number between 13 and 21."
+                )
+            ],
             render_kw={"class": "form-control"},
         )
 
@@ -45,7 +50,7 @@ def question_to_field(q: Question):
         return TextField(
             description=q.description,
             label=q.label,
-            validators=validators + [Length(min=6, max=25)],
+            validators=validators,
             render_kw={"class": "form-control"},
         )
 
