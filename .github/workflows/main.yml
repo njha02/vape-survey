@@ -27,9 +27,19 @@ jobs:
         run: |
           pip install pytest
           pytest
-      - name: Publish app to Google App Engine
-        uses: zxyle/publish-gae-action@v2.3.0
-        with:
-          service_account_email: "vape-survey@appspot.gserviceaccount.com"
+  deploy:
+    name: Deploy to GAE
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+    - uses: actions/checkout@v2
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+          version: '290.0.1'
+          project_id: "vape-survey"
           service_account_key: ${{ secrets.SERVICE_ACCT_KEY }}
-          project_id: vape-survey
+          export_default_credentials: true
+    - run: gcloud info
+    - name: Deploy
+      run: gcloud app deploy --project vape-survey
+        
