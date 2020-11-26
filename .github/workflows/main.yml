@@ -38,7 +38,7 @@ jobs:
             project_id: "vape-survey"
             service_account_key: ${{ secrets.SERVICE_ACCT_KEY }}
             export_default_credentials: true
-        run: |
+      - run: |
             gcloud info
             gcloud app deploy --project vape-survey
         
