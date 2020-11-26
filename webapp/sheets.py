@@ -54,6 +54,7 @@ def create_tab(tab_name):
         ]
     }
     result = sheets.batchUpdate(spreadsheetId=SPREADSHEET_ID, body=body).execute()
+    print(result)
     write_to_sheet(tab_name, HEADERS)
 
 
@@ -68,3 +69,4 @@ def write_to_sheet(tab_name: str, values: List[str]):
         valueInputOption="RAW",
     )
     response = request.execute()
+    print(response)
