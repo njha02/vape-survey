@@ -38,12 +38,13 @@ def thankyou():
     return render_template("pages/thankyou_template.html")
 
 
+def encrypt_string(s):
+    s = s.lower().strip()
+    return hashlib.sha512(str.encode(s)).hexdigest()
+
+
 def submit_to_sheet(data):
     del data["csrf_token"]
-
-    def encrypt_string(s):
-        s = s.lower().strip()
-        return hashlib.sha512(str.encode(s)).hexdigest()
 
     for x in [
         "School",
@@ -136,8 +137,11 @@ def gen_network(tab_name: str):
                 d.get("Friend3", None).lower(),
             ]
             for f in friends:
+                skip_list = [encrypt_string(s) for s in ["", "n/a", "N/A"]]
+                if f in skip_list:
+                    print(f, "skipped")
+                    continue
                 if f not in ids:
-                    print(f)
                     G.add_node(
                         f,
                         size=5,
@@ -156,7 +160,8 @@ def gen_network(tab_name: str):
                 d.get("Friend3", None).lower(),
             ]
             for f in friends:
-                G.add_edge(d["Name"], f)
+                if f in ids:
+                    G.add_edge(d["Name"], f)
 
         pos_ = nx.spring_layout(G, seed=12)
 
