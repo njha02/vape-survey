@@ -88,11 +88,16 @@ def about():
 
 @blueprint.route("/viz", methods=["GET"])
 def viz():
-    return render_template("pages/viz_template.html", viz_html=gen_network())
+    return render_template(
+        "pages/viz_template.html",
+        graph1=gen_network("School 1"),
+        graph2=gen_network("School 2"),
+        graph3=gen_network("School 3"),
+    )
 
 
-def gen_network():
-    data = get_sheet_data("School 1")
+def gen_network(tab_name: str):
+    data = get_sheet_data(tab_name)
 
     ids = set([d["Name"] for d in data])
 
@@ -163,7 +168,7 @@ def gen_network():
     fig = go.Figure(
         data=edge_trace + [node_trace],
         layout=go.Layout(
-            title="Network graph made with Python",
+            title=f"{tab_name} Network Graph",
             titlefont_size=16,
             showlegend=False,
             hovermode="closest",
