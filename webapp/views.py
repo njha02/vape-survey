@@ -90,33 +90,15 @@ def about():
     return render_template("pages/about_template.html")
 
 
-cache = {}
-cache_creation_time = time.time()
-
-
 @blueprint.route("/viz", methods=["GET"])
 def viz():
-    global cache
-    global cache_creation_time
-    if time.time() - cache_creation_time > 60 * 5:  # if cache is older than 5 minutes
-        cache = {}
-        cache_creation_time = time.time()
-
     schools = [
         "North Cross",
-        "School 1",
-        "School 2",
+        # "School 1",
+        # "School 2",
     ]
-    graphs = []
-    start = time.time()
-    for s in schools:
-        if s not in cache:
-            cache[s] = gen_network(s)
-        graphs.append((s, cache[s]))
     return render_template(
-        "pages/viz_template.html",
-        graphs=graphs,
-        time_to_render=f"{str(time.time() - start)} seconds",
+        "pages/viz_template.html", graphs=[(s, gen_network(s)) for s in schools]
     )
 
 
@@ -124,7 +106,7 @@ def gen_network(tab_name: str):
     data = get_sheet_data(tab_name)
 
     # To use cache need to pass hashable data
-    @functools.lru_cache(maxsize=10)
+    # @functools.lru_cache(maxsize=10)
     def _gen_network(jsonified_data):
         _data = json.loads(jsonified_data)
         data = [json.loads(j) for j in _data]
@@ -148,16 +130,33 @@ def gen_network(tab_name: str):
                 <extra></extra>
                 """,
             )
-
-        for d in data:
             friends = [
-                d.get("Friend1", None),
-                d.get("Friend2", None),
-                d.get("Friend3", None),
+                d.get("Friend1", None).lower(),
+                d.get("Friend2", None).lower(),
+                d.get("Friend3", None).lower(),
             ]
             for f in friends:
-                if f in ids:
-                    G.add_edge(d["Name"], f)
+                if f not in ids:
+                    print(f)
+                    G.add_node(
+                        f,
+                        size=5,
+                        color="white",
+                        label=f"""
+                        <br>Id: {f[:10]}</br>
+                        <extra></extra>
+                        """,
+                    )
+                    ids.add(f)
+        # Add Edges
+        for d in data:
+            friends = [
+                d.get("Friend1", None).lower(),
+                d.get("Friend2", None).lower(),
+                d.get("Friend3", None).lower(),
+            ]
+            for f in friends:
+                G.add_edge(d["Name"], f)
 
         pos_ = nx.spring_layout(G, seed=12)
 
@@ -203,7 +202,7 @@ def gen_network(tab_name: str):
             node_trace["y"] += tuple([y])
             node_trace["marker"]["color"] += tuple([G.nodes()[node]["color"]])
             node_trace["marker"]["size"] += tuple([5 * G.nodes()[node]["size"]])
-            # node_trace["text"] += tuple(["<b>" + node[:10] + "</b>"])
+            # node_trace["text"] += tuple(["<b>" + node + "</b>"])
             node_trace["text"] += tuple([""])
             node_trace["hovertemplate"] += tuple([G.nodes()[node]["label"]])
 
