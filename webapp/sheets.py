@@ -111,3 +111,10 @@ def get_sheet_data(tab_name: str) -> Dict[str, List[Dict[str, str]]]:
             sheet.append(row)
         cache[tab_name] = sheet
         return cache[tab_name]
+
+
+def get_schools():
+    sheets_service = init_sheets_service()
+    result = sheets_service.get(spreadsheetId=SPREADSHEET_ID).execute()
+    all_sheets = [x["properties"]["title"] for x in result["sheets"]]
+    return [x for x in all_sheets if "Email" not in x]

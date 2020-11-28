@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 import networkx as nx
 
 from .forms import SurveyForm
-from .sheets import write_to_sheet, get_sheet_data, submit_to_survey
+from .sheets import write_to_sheet, get_sheet_data, submit_to_survey, get_schools
 
 blueprint = Blueprint("pages", __name__)
 
@@ -81,10 +81,8 @@ def about():
 
 @blueprint.route("/viz", methods=["GET"])
 def viz():
-    schools = [
-        "df9b173807",
-        "77ab5a94a3",
-    ]
+    schools = get_schools()
+    print(schools)
     return render_template(
         "pages/viz_template.html", graphs=[(s, gen_network(s)) for s in schools]
     )
@@ -119,9 +117,9 @@ def gen_network(tab_name: str):
                 """,
             )
             friends = [
-                d.get("Friend1", None).lower(),
-                d.get("Friend2", None).lower(),
-                d.get("Friend3", None).lower(),
+                d.get("Closest 1", None).lower(),
+                d.get("Closest 2", None).lower(),
+                d.get("Closest 3", None).lower(),
             ]
             for f in friends:
                 skip_list = [encrypt_string(s) for s in ["", "n/a", "N/A"]]
@@ -142,9 +140,9 @@ def gen_network(tab_name: str):
         # Add Edges
         for d in data:
             friends = [
-                d.get("Friend1", None).lower(),
-                d.get("Friend2", None).lower(),
-                d.get("Friend3", None).lower(),
+                d.get("Closest 1", None).lower(),
+                d.get("Closest 2", None).lower(),
+                d.get("Closest 3", None).lower(),
             ]
             for f in friends:
                 if f in ids:
