@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 import networkx as nx
 
 from .forms import SurveyForm
-from .sheets import write_to_sheet, get_sheet_data
+from .sheets import write_to_sheet, get_sheet_data, submit_to_survey
 
 blueprint = Blueprint("pages", __name__)
 
@@ -70,22 +70,8 @@ def submit_to_sheet(data):
     if "Email" in data:
         email = data["Email"]
         write_to_sheet(f"{data['School']} Emails", [email])
-        del data["Email"]
-    write_to_sheet(
-        data["School"],
-        [
-            data["School"],
-            data["Name"],
-            data["Age"],
-            data["Grade"],
-            data["Gender"],
-            data["Closest 1"],
-            data["Closest 2"],
-            data["Closest 3"],
-            data["Influence"],
-            data["Vape"],
-        ],
-    )
+        data["Email"] = encrypt_string(data["Email"].strip().lower())
+    submit_to_survey(data)
 
 
 @blueprint.route("/about", methods=["GET"])

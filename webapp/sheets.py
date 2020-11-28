@@ -1,27 +1,21 @@
+import json
+import yaml
+import os
+from typing import List, Dict, Any
+
 from google.cloud import storage
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
 from google.auth.transport.requests import Request
 
-import json
-from cryptography.fernet import Fernet
-from typing import List, Dict, Any
-
 
 SPREADSHEET_ID = "144Gb6lhsflflL6MfCQcMSEsQDK819A_5EuZa6_rFtHk"
 # TODO: define all questions in file and generate form/headers/etc from that yaml file
-HEADERS = [
-    "School",
-    "Name",
-    "Age",
-    "Grade",
-    "Gender",
-    "Friend1",
-    "Friend2",
-    "Friend3",
-    "Influence",
-    "Vape",
-]
+question_file = "./questions.yaml"
+assert os.path.exists(question_file), question_file
+with open(question_file, "r") as question_def_file:
+    question_def_dicts = yaml.safe_load_all(question_def_file)
+    HEADERS = [d["label"] for d in question_def_dicts]
 
 sheets_service = None
 
@@ -68,6 +62,15 @@ def create_tab(tab_name):
     ).execute()
     print(result)
     write_to_sheet(tab_name, HEADERS)
+
+
+def submit_to_survey(data):
+    for h in HEADERS:
+        assert h in data
+    write_to_sheet(
+        data["School"],
+        [data[h] for h in HEADERS],
+    )
 
 
 def write_to_sheet(tab_name: str, values: List[str]):
