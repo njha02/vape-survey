@@ -119,7 +119,7 @@ def gen_network(tab_name: str):
                 color = "crimson"
             G.add_node(
                 d["Name"],
-                size=10,
+                size=5,
                 color=color,
                 label=f"""
                 <br>Influence: {d["Influence"]}</br>
@@ -140,7 +140,7 @@ def gen_network(tab_name: str):
                 if f in ids:
                     G.add_edge(d["Name"], f)
 
-        pos_ = nx.spring_layout(G)
+        pos_ = nx.spring_layout(G, seed=12)
 
         def make_edge(x, y, text, width):
             return go.Scatter(
@@ -196,6 +196,8 @@ def gen_network(tab_name: str):
                 margin=dict(b=20, l=5, r=5, t=40),
                 xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
                 yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                width=1000,
+                height=800,
             ),
         )
         return fig.to_html()
