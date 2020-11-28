@@ -40,6 +40,7 @@ def thankyou():
 
 def encrypt_string(s):
     s = s.lower().strip()
+    s += current_app.config["SECRET_KEY"]
     return hashlib.sha512(str.encode(s)).hexdigest()
 
 
@@ -61,6 +62,7 @@ def submit_to_sheet(data):
     ]:
         assert x in data
 
+    data["School"] = encrypt_string(data["School"].strip().lower())[:10]
     data["Name"] = encrypt_string(data["Name"].strip().lower())
     data["Closest 1"] = encrypt_string(data["Closest 1"].strip().lower())
     data["Closest 2"] = encrypt_string(data["Closest 2"].strip().lower())
@@ -94,9 +96,8 @@ def about():
 @blueprint.route("/viz", methods=["GET"])
 def viz():
     schools = [
-        "School 3",
-        # "School 1",
-        # "School 2",
+        "df9b173807",
+        "77ab5a94a3",
     ]
     return render_template(
         "pages/viz_template.html", graphs=[(s, gen_network(s)) for s in schools]
