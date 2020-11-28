@@ -123,7 +123,7 @@ def gen_network(tab_name: str):
                 size=5,
                 color=color,
                 label=f"""
-                <br>Id: {d["Name"]}</br>
+                <br>Id: {d["Name"][:10]}</br>
                 <br>Influence: {d["Influence"]}</br>
                 <br>Age: {d["Age"]}</br>
                 <br>Grade: {d["Grade"]}</br>
