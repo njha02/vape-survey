@@ -183,7 +183,8 @@ def gen_network(tab_name: str):
             node_trace["y"] += tuple([y])
             node_trace["marker"]["color"] += tuple([G.nodes()[node]["color"]])
             node_trace["marker"]["size"] += tuple([5 * G.nodes()[node]["size"]])
-            node_trace["text"] += tuple(["<b>" + node[:10] + "</b>"])
+            # node_trace["text"] += tuple(["<b>" + node[:10] + "</b>"])
+            node_trace["text"] += tuple([""])
             node_trace["hovertemplate"] = G.nodes()[node]["label"]
 
         fig = go.Figure(
