@@ -108,12 +108,16 @@ def viz():
         "School 2",
     ]
     graphs = []
+    start = time.time()
     for s in schools:
         if s not in cache:
             cache[s] = gen_network(s)
         graphs.append((s, cache[s]))
-
-    return render_template("pages/viz_template.html", graphs=graphs)
+    return render_template(
+        "pages/viz_template.html",
+        graphs=graphs,
+        time_to_render=f"{str(time.time() - start)} seconds",
+    )
 
 
 def gen_network(tab_name: str):
