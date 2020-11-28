@@ -1,5 +1,8 @@
 from flask import render_template, Blueprint, request, redirect, flash, current_app
 
+import json
+import functools
+
 import hashlib
 import numpy
 import plotly.graph_objects as go
@@ -88,96 +91,116 @@ def about():
 
 @blueprint.route("/viz", methods=["GET"])
 def viz():
+    schools = [
+        "North Cross",
+        "School 1",
+        "School 2",
+    ]
     return render_template(
         "pages/viz_template.html",
-        graph1=gen_network("School 1"),
-        graph2=gen_network("School 2"),
-        graph3=gen_network("School 3"),
+        graphs=[(s, gen_network(s)) for s in schools],
     )
 
 
 def gen_network(tab_name: str):
     data = get_sheet_data(tab_name)
 
-    ids = set([d["Name"] for d in data])
+    # To use cache need to pass hashable data
+    @functools.lru_cache(maxsize=10)
+    def _gen_network(jsonified_data):
+        _data = json.loads(jsonified_data)
+        data = [json.loads(j) for j in _data]
+        ids = set([d["Name"] for d in data])
 
-    G = nx.Graph()
-    for d in data:
-        color = "cornflowerblue"
-        if d.get("Vape", "False") == "True":
-            color = "crimson"
-        print(d, color)
-        G.add_node(d["Name"], size=10, color=color)
+        G = nx.Graph()
+        for d in data:
+            color = "cornflowerblue"
+            if d.get("Vape", "False") == "True":
+                color = "crimson"
+            G.add_node(
+                d["Name"],
+                size=10,
+                color=color,
+                label=f"""
+                <br>Influence: {d["Influence"]}</br>
+                <br>Age: {d["Age"]}</br>
+                <br>Grade: {d["Grade"]}</br>
+                <br>Gender: {d["Gender"]}</br>
+                <extra></extra>
+                """,
+            )
 
-    for d in data:
-        friends = [
-            d.get("Friend1", None),
-            d.get("Friend2", None),
-            d.get("Friend3", None),
-        ]
-        for f in friends:
-            if f in ids:
-                print("adding edge between", d["Name"], f)
-                G.add_edge(d["Name"], f)
+        for d in data:
+            friends = [
+                d.get("Friend1", None),
+                d.get("Friend2", None),
+                d.get("Friend3", None),
+            ]
+            for f in friends:
+                if f in ids:
+                    G.add_edge(d["Name"], f)
 
-    pos_ = nx.spring_layout(G)
+        pos_ = nx.spring_layout(G)
 
-    def make_edge(x, y, text, width):
-        return go.Scatter(
-            x=x,
-            y=y,
-            line=dict(width=width, color="cornflowerblue"),
-            hoverinfo="text",
-            text=([text]),
-            mode="lines",
+        def make_edge(x, y, text, width):
+            return go.Scatter(
+                x=x,
+                y=y,
+                line=dict(width=width, color="cornflowerblue"),
+                hoverinfo="text",
+                text=([text]),
+                mode="lines",
+            )
+
+        edge_trace = []
+        for edge in G.edges():
+            char_1 = edge[0]
+            char_2 = edge[1]
+            x0, y0 = pos_[char_1]
+            x1, y1 = pos_[char_2]
+            text = char_1 + "--" + char_2
+            trace = make_edge(
+                [x0, x1, None],
+                [y0, y1, None],
+                text,
+                width=0.3,
+            )
+            edge_trace.append(trace)
+
+        node_trace = go.Scatter(
+            x=[],
+            y=[],
+            text=[],
+            textposition="top center",
+            textfont_size=10,
+            mode="markers+text",
+            hoverinfo="none",
+            marker=dict(color=[], size=[], line=None),
         )
+        for node in G.nodes():
+            x, y = pos_[node]
+            node_trace["x"] += tuple([x])
+            node_trace["y"] += tuple([y])
+            node_trace["marker"]["color"] += tuple([G.nodes()[node]["color"]])
+            node_trace["marker"]["size"] += tuple([5 * G.nodes()[node]["size"]])
+            node_trace["text"] += tuple(["<b>" + node[:10] + "</b>"])
+            node_trace["hovertemplate"] = G.nodes()[node]["label"]
 
-    edge_trace = []
-    for edge in G.edges():
-        char_1 = edge[0]
-        char_2 = edge[1]
-        x0, y0 = pos_[char_1]
-        x1, y1 = pos_[char_2]
-        text = char_1 + "--" + char_2
-        trace = make_edge(
-            [x0, x1, None],
-            [y0, y1, None],
-            text,
-            width=0.3,
+        fig = go.Figure(
+            data=edge_trace + [node_trace],
+            layout=go.Layout(
+                title="",
+                titlefont_size=16,
+                showlegend=False,
+                hovermode="closest",
+                margin=dict(b=20, l=5, r=5, t=40),
+                xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+            ),
         )
-        edge_trace.append(trace)
+        return fig.to_html()
 
-    node_trace = go.Scatter(
-        x=[],
-        y=[],
-        text=[],
-        textposition="top center",
-        textfont_size=10,
-        mode="markers+text",
-        hoverinfo="none",
-        marker=dict(color=[], size=[], line=None),
-    )
-    for node in G.nodes():
-        x, y = pos_[node]
-        node_trace["x"] += tuple([x])
-        node_trace["y"] += tuple([y])
-        node_trace["marker"]["color"] += tuple([G.nodes()[node]["color"]])
-        node_trace["marker"]["size"] += tuple([5 * G.nodes()[node]["size"]])
-        node_trace["text"] += tuple(["<b>" + node[:10] + "</b>"])
-
-    fig = go.Figure(
-        data=edge_trace + [node_trace],
-        layout=go.Layout(
-            title=f"{tab_name} Network Graph",
-            titlefont_size=16,
-            showlegend=False,
-            hovermode="closest",
-            margin=dict(b=20, l=5, r=5, t=40),
-            xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-            yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-        ),
-    )
-    return fig.to_html()
+    return _gen_network(json.dumps([json.dumps(s) for s in data]))
 
 
 # def gen_friends_list():

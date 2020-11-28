@@ -2,17 +2,12 @@
 {% block title %}Vizualization{% endblock %}
 {% block content %}
 
-<div class="page-header">
-  <h1>Viz Page</h1>
-</div>
+  <div class="page-header">
+    <h1>Viz Page</h1>
+  </div>
 
-<h3> School 1</h3>
-{{ graph1 | safe }}
-
-<h3> School 2</h3>
-{{ graph2 | safe }}
-
-<h3> School 3</h3>
-{{ graph3 | safe }}
-
+  {% for s, g in graphs %}
+    <h3> {{ s }} </h3>
+    {{ g | safe }}
+  {% endfor %}
 {% endblock %}

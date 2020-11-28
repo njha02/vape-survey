@@ -1,3 +1,0 @@
-export FLASK_ENV=development
-cd webapp
-flask run
