@@ -59,7 +59,7 @@ type: text
 required: true
 ---
 label: "Influence"
-description: "True/False: I think my friends strongly inuence my actions."
+description: "True/False: I think my friends strongly influence my actions."
 type: select
 required: true
 choices:
@@ -67,7 +67,7 @@ choices:
   - "False"
 ---
 label: "Vape"
-description: "True/False: I vape (at least once every two weeks."
+description: "True/False: I vape (at least once every two weeks)."
 type: select
 required: true
 choices:
