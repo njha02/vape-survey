@@ -94,7 +94,7 @@ def about():
 @blueprint.route("/viz", methods=["GET"])
 def viz():
     schools = [
-        "North Cross",
+        "School 3",
         # "School 1",
         # "School 2",
     ]
