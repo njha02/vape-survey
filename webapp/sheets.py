@@ -5,7 +5,7 @@ from google.auth.transport.requests import Request
 
 import json
 from cryptography.fernet import Fernet
-from typing import List
+from typing import List, Dict, Any
 
 
 SPREADSHEET_ID = "144Gb6lhsflflL6MfCQcMSEsQDK819A_5EuZa6_rFtHk"
@@ -83,3 +83,28 @@ def write_to_sheet(tab_name: str, values: List[str]):
     )
     response = request.execute()
     print(response)
+
+
+cache = {}
+
+
+def get_sheet_data(tab_name: str) -> Dict[str, List[Dict[str, str]]]:
+    global cache
+    sheets_service = init_sheets_service()
+    if tab_name in cache:
+        print(f"Cache hit for {tab_name}")
+        return cache[tab_name]
+    else:
+        result = (
+            sheets_service.values()
+            .get(spreadsheetId=SPREADSHEET_ID, range=f"{tab_name}")
+            .execute()
+        )
+        values = result["values"]
+        keys = values[0]
+        sheet = []
+        for data in values[1:]:
+            row = {k: v for (k, v) in zip(keys, data)}
+            sheet.append(row)
+        cache[tab_name] = sheet
+        return cache[tab_name]
