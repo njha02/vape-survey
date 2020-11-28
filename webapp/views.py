@@ -177,6 +177,7 @@ def gen_network(tab_name: str):
             textfont_size=10,
             mode="markers+text",
             hoverinfo="none",
+            hovertemplate=[],
             marker=dict(color=[], size=[], line=None),
         )
         for node in G.nodes():
@@ -187,7 +188,7 @@ def gen_network(tab_name: str):
             node_trace["marker"]["size"] += tuple([5 * G.nodes()[node]["size"]])
             # node_trace["text"] += tuple(["<b>" + node[:10] + "</b>"])
             node_trace["text"] += tuple([""])
-            node_trace["hovertemplate"] = G.nodes()[node]["label"]
+            node_trace["hovertemplate"] += tuple([G.nodes()[node]["label"]])
 
         fig = go.Figure(
             data=edge_trace + [node_trace],
