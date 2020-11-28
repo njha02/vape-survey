@@ -1,13 +1,13 @@
-from flask import render_template, Blueprint, request, redirect, flash, current_app
-
 import json
 import functools
-
+import time
 import hashlib
+import os
+
+from flask import render_template, Blueprint, request, redirect, flash, current_app
 import numpy
 import plotly.graph_objects as go
 import networkx as nx
-import os
 
 from .forms import SurveyForm
 from .sheets import write_to_sheet, get_sheet_data
@@ -90,17 +90,30 @@ def about():
     return render_template("pages/about_template.html")
 
 
+cache = {}
+cache_creation_time = time.time()
+
+
 @blueprint.route("/viz", methods=["GET"])
 def viz():
+    global cache
+    global cache_creation_time
+    if time.time() - cache_creation_time > 60 * 5:  # if cache is older than 5 minutes
+        cache = {}
+        cache_creation_time = time.time()
+
     schools = [
         "North Cross",
         "School 1",
         "School 2",
     ]
-    return render_template(
-        "pages/viz_template.html",
-        graphs=[(s, gen_network(s)) for s in schools],
-    )
+    graphs = []
+    for s in schools:
+        if s not in cache:
+            cache[s] = gen_network(s)
+        graphs.append((s, cache[s]))
+
+    return render_template("pages/viz_template.html", graphs=graphs)
 
 
 def gen_network(tab_name: str):
