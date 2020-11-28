@@ -42,6 +42,7 @@ def submit_to_sheet(data):
     del data["csrf_token"]
 
     def encrypt_string(s):
+        s = s.lower().strip()
         return hashlib.sha512(str.encode(s)).hexdigest()
 
     for x in [
